@@ -1,19 +1,18 @@
 import os
 import time
 
-# Global variables.
-player1 = ""
-player2 = ""
-
 
 class Board():
   def __init__(self):
     self.cells = [" ", " ", " ", 
                   " ", " ", " ", 
                   " ", " ", " "]
-    self.current = 1
-    self.winner = False
+    self.player1 = ""
+    self.player2 = ""
+    self.current = None
     self.gameRunning = True
+    self.gameType = None
+    self.winner = None
 
   def display(self):
     idx = 0
@@ -25,17 +24,16 @@ class Board():
     print()
   
   def updateCell(self, cellNum, currentPlayer):
-    global player1, player2
-    cell = cellNum - 1
-    if (self.cells[cell] == " "):
-      if (currentPlayer == 1):
-        self.cells[cellNum - 1] = player1
-      elif (currentPlayer == 2):
-        self.cells[cellNum - 1] = player2
-      return True
-    else:
-      print("There is already a player in that spot!\n")
-      return False
+      cell = cellNum - 1
+      if (self.cells[cell] == " "):
+          if (currentPlayer == 1):
+              self.cells[cellNum - 1] = self.player1
+          elif (currentPlayer == 2):
+              self.cells[cellNum - 1] = self.player2
+          return True
+      else:
+          print("There is already a player in that spot!\n")
+          return False
 
   # Checks for a horizontal win.
   def horizontalWin(self):
@@ -59,15 +57,21 @@ class Board():
 
   # Checks for a diagonal win.
   def diagonalWin(self):
-    if (self.cells[4] != " "):
-      if ((self.cells[0] or self.cells[2]) == self.cells[4] == 
-          (self.cells[6] or self.cells[8])):
-        board.winner = self.cells[4]
-        return True
+      if (self.cells[4] != " "):
+          #if ((self.cells[0] or self.cells[2]) == self.cells[4] == 
+          #(self.cells[6] or self.cells[8])):
+          if (self.cells[0] == self.cells[4] and self.cells[4] == self.cells[8]):
+              board.winner = self.cells[4]
+              return True
+          if (self.cells[2] == self.cells[4] and self.cells[4] == self.cells[6]):
+              board.winner = self.cells[4]
+              return True
+      return False
+
 
   # Checks for a tie.
   def checkTie(self):
-    if (board.winner == False):
+    if (board.winner == None):
       if (" " in self.cells):
         return False
       else:
@@ -77,13 +81,13 @@ class Board():
 
 def printHeader():
   print("Welcome to Tic-Tac-Toe.")
-  print(f'Player 1 is {player1}')
-  print(f'Player 2 is {player2}\n')
+  print(f'Player 1 is {board.player1}')
+  print(f'Player 2 is {board.player2}\n')
 
 
 def displayBoard():
   # Clear the screen.
-  os.system("clear")
+  #os.system("clear")
 
   # Print the header.
   printHeader()
@@ -92,12 +96,51 @@ def displayBoard():
   board.display()
 
 
+def aiCheckWin():
+    if (board.horizontalWin() or board.verticalWin() or board.diagonalWin()):
+        return True
+    else:
+        return False
+
+
+def aiMove():
+    print(f'Current Player: {board.current}')
+    print("AI making a move.")
+    choice = None
+    for cell in range(9):
+        print(f'cell: {cell+1} | {board.cells[cell]}')
+        if (board.cells[cell] == " "):
+            board.cells[cell] = board.player2
+            if aiCheckWin():
+                #break
+                return None
+            # Now check if the opponent will win if they choose that cell.
+            board.cells[cell] = board.player1
+            if aiCheckWin():
+                print(f'Player 1 can win in cell {cell+1}')
+                board.winner = None
+                board.cells[cell] = board.player2
+                #break
+                return None
+            board.cells[cell] = " "
+            if (choice == None):
+                print(f'choice = {cell} aka {cell+1}')
+                choice = cell
+
+    #validChoice = board.updateCell(choice, board.current)
+    print()
+    board.cells[choice] = board.player2
+    return None
+
+
 def checkWin():
+  print(f'Checking win for player {board.current}')
   if (board.horizontalWin() or board.verticalWin() or board.diagonalWin()):
     board.gameRunning = False
     displayBoard()
     print(f'{board.winner} is the winner!\n')
     return True
+
 
 def checkTie():
   if (board.checkTie()):
@@ -106,6 +149,16 @@ def checkTie():
     print("It's a tie!\n")
     return True
 
+    
+def playerSetUp():
+    board.gameType = input("Do you want to play Singleplayer or Multiplayer? (S/M): ")
+    board.player1 = input("Does player 1 want to be X's or O's? (X/O): ")
+    if (board.player1 == "X"):
+        board.player2 = "O"
+    if (board.player1 == "O"):
+        board.player2 = "X"
+    board.current = 1
+
 
 def switchPlayer():
   if (board.current == 1):
@@ -113,38 +166,41 @@ def switchPlayer():
   elif (board.current == 2):
     board.current = 1
 
-    
-def playerSetUp():
-  global player1, player2
-  player1 = input("Does player 1 want to be X's or O's? (X/O): ")
-  if (player1 == "X"):
-    player2 = "O"
-  if (player1 == "O"):
-    player2 = "X"
-
 
 def main():
-  global player1, player2
-  playerSetUp()
+    playerSetUp()
 
-  while board.gameRunning:
-    # Display the board.
-    displayBoard()
+    while board.gameRunning:
+        # Display the board.
+        displayBoard()
 
-    # ValidChoice starts as false because the player has not 
-    # made a valid choice yet.
-    validChoice = False 
-    while not validChoice:
-      # Player chooses the cell/square.
-      cellChoice = int(input(f'Player {board.current}: please choose 1-9.  '))
+        # If the gameType is "M", then both players are real people and we 
+        # need to check and make sure their choices are valid.
+        
+        # If the gameType is "S", then the current player is player 1 who is 
+        # real person and we need to make sure their choice is valid.
+        if (board.gameType == "M" or board.current == 1):
 
-      # Check if the choice is valid. 
-      # If the choice is valid, update the board. Otherwise, choose another cell.
-      validChoice = board.updateCell(cellChoice, board.current)
+            # ValidChoice starts as false because the player has not 
+            # made a valid choice yet.
+            validChoice = False 
+            while not validChoice:
+                # Player chooses the cell/square.
+                cellChoice = int(input(f'Player {board.current}: please choose 1-9.  '))
 
-    checkWin()
-    checkTie()
-    switchPlayer()
+                # Check if the choice is valid. 
+                # If the choice is valid, update the board. Otherwise, choose another cell.
+                validChoice = board.updateCell(cellChoice, board.current)
+                print(f'Player {board.current} chose {cellChoice}')
+        
+        # Otherwise, the gameType is "S" and the current player is player 2
+        # which is the AI.
+        else:
+            aiMove()
+
+        checkWin()
+        checkTie()
+        switchPlayer()
     
 
 board = Board()
