@@ -82,12 +82,13 @@ class Board():
 def printHeader():
   print("Welcome to Tic-Tac-Toe.")
   print(f'Player 1 is {board.player1}')
-  print(f'Player 2 is {board.player2}\n')
+  print(f'Player 2 is {board.player2}')
+  print(f'\x1B[3mType \"Q\" to quit the game.\x1B[0m\n')
 
 
 def displayBoard():
   # Clear the screen.
-  #os.system("clear")
+  os.system("clear")
 
   # Print the header.
   printHeader()
@@ -127,7 +128,6 @@ def aiMove():
                 print(f'choice = {cell} aka {cell+1}')
                 choice = cell
 
-    #validChoice = board.updateCell(choice, board.current)
     print()
     board.cells[choice] = board.player2
     return None
@@ -150,9 +150,34 @@ def checkTie():
     return True
 
     
-def playerSetUp():
+def oldPlayerSetUp():
     board.gameType = input("Do you want to play Singleplayer or Multiplayer? (S/M): ")
     board.player1 = input("Does player 1 want to be X's or O's? (X/O): ")
+    if (board.player1 == "X"):
+        board.player2 = "O"
+    if (board.player1 == "O"):
+        board.player2 = "X"
+    board.current = 1
+
+def playerSetUp():
+    validInput = False
+    while not validInput:
+        gameMsg = "Do you want to play Singleplayer or Multiplayer? (S/M): "
+        userInput = input(gameMsg).upper()
+        if (userInput == "S" or userInput == "M"):
+            board.gameType = userInput
+            validInput = True
+        os.system("clear")
+
+    validInput = False
+    while not validInput:
+        gameMsg = "Does player 1 want to be X's or O's? (X/O): "
+        userInput = input(gameMsg).upper()
+        if (userInput == "X" or userInput == "O"):
+            board.player1 = userInput
+            validInput = True
+        os.system("clear")
+
     if (board.player1 == "X"):
         board.player2 = "O"
     if (board.player1 == "O"):
@@ -186,12 +211,27 @@ def main():
             validChoice = False 
             while not validChoice:
                 # Player chooses the cell/square.
-                cellChoice = int(input(f'Player {board.current}: please choose 1-9.  '))
+                validInput = False
+                while not validInput:
+                    userInput = input(f'Player {board.current}: please choose 1-9.  ')
+                    if (userInput == "Q" or userInput == "q"):
+                        print(f'Game Quit.')
+                        exit()
+                    try:
+                        #userInput = int(input(f'Player {board.current}: please choose 1-9.  '))
+                        int(userInput)
+                        validInput = True
+                    except ValueError:
+                        validInput = False
+                        displayBoard()
+                
+                cellChoice = int(userInput)
 
                 # Check if the choice is valid. 
-                # If the choice is valid, update the board. Otherwise, choose another cell.
+                # If the choice is valid, update the board. 
+                # Otherwise, choose another cell.
                 validChoice = board.updateCell(cellChoice, board.current)
-                print(f'Player {board.current} chose {cellChoice}')
+                # print(f'Player {board.current} chose {cellChoice}')
         
         # Otherwise, the gameType is "S" and the current player is player 2
         # which is the AI.
