@@ -12,11 +12,11 @@ choose 'X' or 'O' and Player 2 will be given the symbol that isn't chosen by
 player one. Once the game mode and player symbols are chosen, the game 
 is started by displaying the game heading, instructions and an empty board.
 The cells of the board grid are numbered as follows:
-> &nbsp; 1 &nbsp;| &nbsp; 2 &nbsp;|&nbsp; 3 &nbsp;| \
+> &nbsp; 1 &nbsp;| &nbsp; 2 &nbsp;| &nbsp; 3 &nbsp;| \
 > -------------- \
-> &nbsp; 4 &nbsp;| &nbsp; 5 &nbsp;|&nbsp; 6 &nbsp;| \
+> &nbsp; 4 &nbsp;| &nbsp; 5 &nbsp;| &nbsp; 6 &nbsp;| \
 > -------------- \
-> &nbsp; 7 &nbsp;| &nbsp; 8 &nbsp;|&nbsp; 9 &nbsp;| 
+> &nbsp; 7 &nbsp;| &nbsp; 8 &nbsp;| &nbsp; 9 &nbsp;| 
 
 
 ## Multiplayer
@@ -39,17 +39,18 @@ first check for a win and if no winner is found, then it will check for a tie.
 If there is neither a win or tie, the program will switch the players and 
 display an updated board. If the current player is Player 2, then the 
 computer chooses a cell, and the game proceeds as described previously.
-> ### The aiMove function\
-> The purpose of the function is to find the best cell for the AI to place\
-> its mark. The function uses exhaustive search and loops through the\
-> numbered cells in ascending order, starting at cell one in the top-left\
-> corner of the board grid. At each cell, we first check if the AI will win\
-> by placing a mark. If the AI will win, then we place the AI’s mark and the\ 
-> game is over. If the AI will not win, then we check if Player 1 will win by\ 
-> placing a mark. If Player 1 will win, then the AI will place a mark to\
-> prevent Player 1 from winning. If Player 2 will not win, then we will move\ 
-> on to the next cell. If we have looped through every cell and no marks were\ 
+> ### The aiMove function
+> The purpose of the function is to find the best cell for the AI to place
+> its mark. The function uses exhaustive search and loops through the
+> numbered cells in ascending order, starting at cell one in the top-left
+> corner of the board grid. At each cell, we first check if the AI will win
+> by placing a mark. If the AI will win, then we place the AI’s mark and the 
+> game is over. If the AI will not win, then we check if Player 1 will win by 
+> placing a mark. If Player 1 will win, then the AI will place a mark to
+> prevent Player 1 from winning. If Player 2 will not win, then we will move 
+> on to the next cell. If we have looped through every cell and no marks were 
 > placed, then the AI places a mark in the first open cell.
+
 
 This project is a simple object-oriented game programmed in Python. The 
 purpose of the project was to create a game that features both single player 
