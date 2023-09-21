@@ -12,11 +12,11 @@ choose 'X' or 'O' and Player 2 will be given the symbol that isn't chosen by
 player one. Once the game mode and player symbols are chosen, the game 
 is started by displaying the game heading, instructions and an empty board.
 The cells of the board grid are numbered as follows:
->  1 | 2 | 3\
-> -----------\
->  4 | 5 | 6\
-> -----------\
->  7 | 8 | 9
+> &nbsp; 1 &nbsp;| &nbsp; 2 &nbsp;|&nbsp; 3 &nbsp;| \
+> -------------- \
+> &nbsp; 4 &nbsp;| &nbsp; 5 &nbsp;|&nbsp; 6 &nbsp;| \
+> -------------- \
+> &nbsp; 7 &nbsp;| &nbsp; 8 &nbsp;|&nbsp; 9 &nbsp;| 
 
 
 ## Multiplayer
